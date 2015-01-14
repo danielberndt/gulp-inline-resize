@@ -1,3 +1,6 @@
+[![build status](https://img.shields.io/travis/danielberndt/gulp-inline-resize.svg?style=flat-square)](https://travis-ci.org/danielberndt/gulp-inline-resize)
+[![dependency status](https://img.shields.io/david/danielberndt/gulp-inline-resize.svg?style=flat-square)](https://david-dm.org/danielberndt/gulp-inline-resize)
+
 # GULP-INLINE-RESIZE
 
 _put your resize information in your code, not your build file_
