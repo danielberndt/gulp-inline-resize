@@ -129,16 +129,28 @@ There currently is no support for absolute paths yet.
 
 ## Options
 
-* `replaceIn` default: `[".html",".css",".js"]`
-  a list of extensions that indicates which files will be analysed for image references
+#### `replaceIn`
 
-* `noZoom` default: `true`
-  determines if images get enlarged if the source image is smaller than the target size.
+default: `[".html",".css",".js"]`
 
-* `useImageMagick` default: `true`
+a list of extensions that indicates which files will be analysed for image references
+
+#### `noZoom`
+
+default: `true`
+
+determines if images get enlarged if the source image is smaller than the target size.
+
+#### `useImageMagick`
+
+default: `true`
+
 tells [gm](https://github.com/aheckmann/gm) the value of the `imageMagick` option. Setting this option to `false` would result in using `GraphicsMagick`
 
-* `quiet` default: `false`
+#### `quiet`
+
+default: `false`
+
 this plugin is quite chatty keeping you informed about what it found and did, surpress any log messages by setting this option
 
 ## Requirements
