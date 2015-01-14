@@ -52,7 +52,7 @@ var gulp = require("gulp"),
     inlineResize = require("gulp-inline-resize");
 
 gulp.task("resize-images", function() {
-  return gulp.src("./src/**.+(html|css|jpg|png)")
+  return gulp.src("./src/**/*.+(html|css|jpg|png)")
     .pipe(inlineResize({replaceIn:[".html",".css"]}))
     .pipe(gulp.dest("./build"));
 });
