@@ -88,7 +88,7 @@ module.exports = function(opts) {
     var extname = path.extname(file.path);
 
     if (contains(options.replaceIn, extname)) {
-      merge(this._processables,searchAndReplaceImages(file));
+      merge.recursive(this._processables,searchAndReplaceImages(file));
       cb(null, file);
     } else if (contains([".jpg",".png",".gif",".jpeg"], extname)){
       this._images.push(file);

@@ -86,4 +86,11 @@ describe("gulp-inline-resize", function() {
       .pipe(assert.end());
   })
 
+  it("should resize a referenced image if it referenced from two files", function (done) {
+    gulp.src([fixtures("reference-1.html"),fixtures("reference-2.html"),fixtures("image.jpg")]).on('error',console.log)
+      .pipe(inlineResize())
+      .pipe(assert.length(4)) // two html files, two versions of the image
+      .pipe(assert.end(done));
+  })
+
 });
