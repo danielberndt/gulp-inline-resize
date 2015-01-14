@@ -59,6 +59,65 @@ gulp.task("resize-images", function() {
 
 ```
 
+this is a more complete example showing varying stream operations:
+
+```js
+var gulp = require("gulp"),
+    inlineResize = require("gulp-inline-resize"),
+    less = require("gulp-less"),
+    imagemin = require("gulp-imagemin"),
+    cssmin = require("gulp-cssmin"),
+    merge = require("merge-stream"),
+    filter = require("gulp-filter");
+
+var CONFIG = {
+  htmlSrc: "src/**/*.html",
+  lessEntry: "src/style.less",
+  lessSrc: "src/**/*.less",
+  imgSrc: "src/**/*.+(jpg|png|gif)"
+};
+
+function getAssetStream() {
+  var htmlStream = gulp.src(CONFIG.htmlSrc),
+      cssStream = gulp.src(CONFIG.lessEntry)
+        .pipe(less())
+        .on('error',console.log),
+      imageStream = gulp.src(CONFIG.imgSrc);
+
+  return merge(htmlStream, cssStream, imageStream)
+          .pipe(inlineResize());
+}
+
+gulp.task("dev-assets", function() {
+  return getAssetStream()
+    .pipe(gulp.dest("build"));
+});
+
+gulp.task("watch", ["dev-assets"], function() {
+  gulp.watch([
+    CONFIG.htmlSrc,
+    CONFIG.lessSrc,
+    CONFIG.imgSrc
+  ], ["dev-assets"]);
+});
+
+gulp.task("prod-assets", function() {
+  var cssFilter = filter("**/*.css"),
+      imgFilter = filter("**/*.+(jpg|png|gif)");
+
+  return getAssetStream()
+    .pipe(cssFilter)
+    .pipe(cssmin())
+    .pipe(cssFilter.restore())
+    .pipe(imgFilter)
+    .pipe(imagemin({progressive: true}))
+    .pipe(imgFilter.restore())
+    .pipe(gulp.dest("dist"));
+});
+
+gulp.task("default",["watch"]);
+```
+
 ## What do I need to do in order to make it work?
 
 If you're using _relative_ paths to refer to your images it hopefully will work out of the box for you. The trickiest part to get right at the moment is mapping the file references to the correct image. This plugin assumes that if you were to `gulp.dest()` the input of this plugin that the resulting files would correctly reference each other via.
