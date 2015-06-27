@@ -123,12 +123,12 @@ module.exports = function(opts) {
 
           // check for last modification date
           fs.stat(imageFile.path, function(err, stats) {
-            if (err) return deferred.reject(new Error(error));
+            if (err) return deferred.reject(new Error(err));
             var cacheKey = imageFile.relative+"-"+stats.mtime.getTime()+resizeDimension+resizeTo;
 
             // if it's cached push it right away
             var cacheEntry = CACHE[cacheKey];
-            if (CACHE[cacheKey]) {
+            if (cacheEntry) {
               cacheEntry.iteration = iteration;
               that.push(createNewVinylFile(imageFile, cacheEntry.content, resizeTo, resizeDimension));
               deferred.resolve();
@@ -136,7 +136,7 @@ module.exports = function(opts) {
               gm(imageFile.contents,imageFile.path)
                 .options({imageMagick: options.useImageMagick})
                 .size({bufferStream: true}, function(err, size) {
-                  if (err) return deferred.reject(new Error(error));
+                  if (err) return deferred.reject(new Error(err));
                   if (options.noZoom) {
                     if (resizeDimension=="w" && resizeTo>=size.width ||
                       resizeDimension=="h" && resizeTo>=size.height) {
@@ -156,7 +156,7 @@ module.exports = function(opts) {
                     resizeDimension=="w"? resizeTo : 10000,
                     resizeDimension=="h"? resizeTo : 10000
                   ).toBuffer(function(err, buffer) {
-                    if (err) return deferred.reject(new Error(error));
+                    if (err) return deferred.reject(new Error(err));
                     log("Resized [",
                       gutil.colors.cyan(imageFile.relative),
                       "] to",
