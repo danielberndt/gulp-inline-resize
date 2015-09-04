@@ -146,7 +146,7 @@ var retVal = function(opts) {
                 try {targetStats = fs.statSync(targetPath);} catch (e) {}
 
                 // simply return nothing, since it's already there!
-                if (targetStats && targetStats.mtime.getTime() > stats.mtime.getTime()) return deferred.resolve();;
+                if (targetStats && targetStats.mtime.getTime() >= stats.mtime.getTime()) return deferred.resolve();
               }
 
               // if it's cached push it right away
