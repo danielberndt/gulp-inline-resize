@@ -17,19 +17,16 @@
   "license": "ISC",
   "dependencies": {
     "adler32": "^0.1.5",
+    "buffer-equal": "0.0.1",
     "gm": "^1.17.0",
+    "gulp": "^3.8.10",
     "gulp-util": "^3.0.2",
     "lodash.contains": "^2.4.1",
     "merge": "^1.2.0",
-    "q": "^1.1.2",
-    "through2": "^0.6.3"
-  },
-  "devDependencies": {
-    "buffer-equal": "0.0.1",
-    "gulp": "^3.8.10",
-    "gulp-util": "^3.0.2",
     "mocha": "^2.1.0",
+    "q": "^1.1.2",
     "should": "^4.5.1",
-    "stream-assert": "^2.0.2"
+    "stream-assert": "^2.0.2",
+    "through2": "^0.6.3"
   }
 }
