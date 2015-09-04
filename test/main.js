@@ -93,4 +93,11 @@ describe("gulp-inline-resize", function() {
       .pipe(assert.end(done));
   })
 
+  it("should resize a referenced image and still leave the original if it's requested too", function (done) {
+    gulp.src([fixtures("resized-and-original.html"),fixtures("image.jpg")]).on('error',console.log)
+      .pipe(inlineResize())
+      .pipe(assert.length(3)) // one html file, two versions of the image
+      .pipe(assert.end(done));
+  })
+
 });

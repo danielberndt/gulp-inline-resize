@@ -13,7 +13,7 @@ var PluginError = gutil.PluginError;
 
 var PLUGIN_NAME = "inline-resize";
 
-var filepathRegex = /(?:\'|\"|\(|\s|&#x27;)((?!\s)[ a-z0-9_@\-\/\.]{2,}\.(?:jpe?g|gif|png));(\d+)([wh])/ig;
+var filepathRegex = /(?:\'|\"|\(|\s|&#x27;)((?!\s)[ a-z0-9_@\-\/\.]{2,}\.(?:jpe?g|gif|png))(?:;(\d+)([wh]))?/ig;
 
 var CACHE = {},
     iteration = 0;
@@ -45,11 +45,16 @@ module.exports = function(opts) {
     log("Finding references in [", gutil.colors.magenta(file.path),"]");
     var processesables = {};
     var replaced = file.contents.toString("utf8").replace(filepathRegex, function(match, fullPath, resizeTo, resizeDimension){
+      // resizeTo = 200, resizeDimenstion = 'w'
+      if (!resizeDimension) resizeDimension = "noResize";
       var imgPath = path.relative(file.base,path.resolve(file.base, fullPath));
       imgPath = path.join(path.dirname(file.relative), imgPath);
 
-      var variants = (processesables[imgPath] = (processesables[imgPath] || {}));
-      (variants[resizeDimension]=(variants[resizeDimension]||{}))[resizeTo] = true;
+      var variants = (processesables[imgPath] = processesables[imgPath] || {});
+      var dimensionVariants = (variants[resizeDimension] = variants[resizeDimension] || {});
+      if (resizeDimension === "noResize") return match;
+
+      dimensionVariants[resizeTo] = true;
       var newName = path.join(path.dirname(fullPath),path.basename(fullPath,path.extname(fullPath))+"-"+resizeTo+resizeDimension+path.extname(fullPath));
       return match.substr(0,match.indexOf(fullPath))+newName;
     });
@@ -114,8 +119,9 @@ module.exports = function(opts) {
       // if no variants found, just push the original file
       if (!variants) return that.push(imageFile);
 
-
       Object.keys(variants).forEach(function(resizeDimension) {
+        if (resizeDimension === "noResize") return that.push(imageFile);
+
         Object.keys(variants[resizeDimension]).forEach(function(resizeTo) {
           resizeTo = parseInt(resizeTo,10);
 
