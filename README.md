@@ -157,6 +157,19 @@ this plugin is quite chatty keeping you informed about what it found and did, su
 
 Either [GraphicsMagick](http://www.graphicsmagick.org/) or [ImageMagick](http://www.imagemagick.org/) need to be installed (and tell which one you use via the `useImageMagick` option). Otherwise you might get a mysterious `spawn` error from node.
 
+## Contribute
+
+Contributions are very welcome.
+
+Those steps should get you up and running:
+
+```
+git clone git@github.com:danielberndt/gulp-inline-resize.git
+cd gulp-inline-resize
+npm install
+npm test
+```
+
 ## License
 
 ISC © Daniel Berndt
