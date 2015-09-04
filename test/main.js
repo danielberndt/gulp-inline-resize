@@ -5,7 +5,8 @@ var inlineResize = require("../"),
     assert = require("stream-assert"),
     File = require("gulp-util").File,
     gm = require("gm"),
-    bufferEqual = require('buffer-equal');
+    bufferEqual = require('buffer-equal'),
+    should = require("should");
 
 require("mocha");
 
@@ -98,6 +99,42 @@ describe("gulp-inline-resize", function() {
       .pipe(inlineResize())
       .pipe(assert.length(3)) // one html file, two versions of the image
       .pipe(assert.end(done));
+  })
+
+  it("should cache images accross different pipes", function (done) {
+    gulp.src([fixtures("reference-1.html"),fixtures("image.jpg")]).on('error',console.log)
+      .pipe(inlineResize())
+      .pipe(assert.end(next));
+
+    function next() {
+      should(Object.keys(inlineResize._getCache())).with.lengthOf(2);
+      gulp.src([fixtures("reference-2.html"),fixtures("image.jpg")]).on('error',console.log)
+        .pipe(inlineResize())
+        .pipe(assert.end(next2));
+    }
+
+    function next2() {
+      should(Object.keys(inlineResize._getCache())).with.lengthOf(2);
+      inlineResize.setMaxCacheAge(1)
+
+      gulp.src([fixtures("reference-1.html"),fixtures("image.jpg")]).on('error',console.log)
+        .pipe(inlineResize())
+        .pipe(assert.end(next3));
+    }
+
+    function next3() {
+      should(Object.keys(inlineResize._getCache())).with.lengthOf(4);
+
+      gulp.src([fixtures("reference-1.html"),fixtures("image.jpg")]).on('error',console.log)
+        .pipe(inlineResize())
+        .pipe(assert.end(next4));
+    }
+
+    function next4() {
+      should(Object.keys(inlineResize._getCache())).with.lengthOf(2);
+      inlineResize.setMaxCacheAge(0);
+      done();
+    }
   })
 
 });

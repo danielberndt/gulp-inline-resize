@@ -153,6 +153,36 @@ default: `false`
 
 this plugin is quite chatty keeping you informed about what it found and did, surpress any log messages by setting this option
 
+## Global Options
+
+Global options should be applied at the top of your gulpfile. These options will affect all `inlineResize()` operations.
+
+You can call them like this:
+
+```
+var gulp = require("gulp"),
+    inlineResize = require("gulp-inline-resize");
+
+inlineResize.setMaxCacheAge(50);
+
+gulp.task("resize-images", function() {
+[...]
+
+```
+
+
+#### `setMaxCacheAge(val = 0)`
+
+*hint: only needed if you have several streams using the inline resize functionality (see [issue #3](/../../issues/3) for more details)*
+
+This sets the longevity of items in the cache.
+With the default setting of `0` items will immediately be cleared from the cache if they have not been found once in the previous run.
+
+If you set a higher cache age, items will stay in the cache much longer.
+
+If you set a negative age, items will always be deleted from the cache.
+
+
 ## Requirements
 
 Either [GraphicsMagick](http://www.graphicsmagick.org/) or [ImageMagick](http://www.imagemagick.org/) need to be installed (and tell which one you use via the `useImageMagick` option). Otherwise you might get a mysterious `spawn` error from node.
