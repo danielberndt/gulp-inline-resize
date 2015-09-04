@@ -159,9 +159,9 @@ default: `{destFolder: null}`
 
 usage: `.pipe(inlineResize({naiveCache: {destFolder: "build"}}))`
 
-if you provide a destination folder, this option will look inside this folder to check wether a file with the target file name exists.
+if you provide a destination folder, this option will look inside this folder to check whether a file with the target file name exists.
 
-Why *naive cache* you might ask?
+Why *naive* cache, you might ask?
 
 Well, since the inline resizer is operating within streams, it doesn't know what happens to the files after it processed them. You could decide to rename them or put them into a sprite sheet. In those cases this option doesn't work.
 
@@ -196,6 +196,10 @@ With the default setting of `0` items will immediately be cleared from the cache
 If you set a higher cache age, items will stay in the cache much longer.
 
 If you set a negative age, items will always be deleted from the cache.
+
+## Bonus Time!
+
+Incorporating the default image processing options described in [this smashing magazine article](http://www.smashingmagazine.com/2015/06/25/efficient-image-resizing-with-imagemagick/) the resulting image size is considerably smaller (~50% for jpgs) than the default resize of [gm](https://github.com/aheckmann/gm).
 
 
 ## Requirements
