@@ -175,21 +175,35 @@ var retVal = function(opts) {
                         return deferred.resolve();
                       }
                     }
-                    this.resize(
-                      resizeDimension=="w"? resizeTo : 10000,
-                      resizeDimension=="h"? resizeTo : 10000
-                    ).toBuffer(function(err, buffer) {
-                      if (err) return deferred.reject(new Error(err));
-                      log("Resized [",
-                        gutil.colors.cyan(imageFile.relative),
-                        "] to",
-                        gutil.colors.green(resizeTo+resizeDimension),
-                        gutil.colors.gray("saving "+((imageFile.contents.length-buffer.length)/imageFile.contents.length*100).toFixed(2)+"%")
-                      );
-                      CACHE[cacheKey] = {content: buffer, iteration: iteration};
-                      that.push(createNewVinylFile(imageFile, buffer, resizeTo, resizeDimension));
-                      deferred.resolve();
-                    });
+                    this
+                      .unsharp(0.25,0.08,8.3,0.045)
+                      .dither(false)
+                      .quality(82)
+                      .filter("Triangle")
+                      .interlace("None")
+                      .colorspace("sRGB")
+                      .define("jpeg:fancy-upsampling=off")
+                      .define("filter:support=2")
+                      .define("png:compression-filter=5")
+                      .define("png:compression-level=9")
+                      .define("png:compression-strategy=1")
+                      .define("png:exclude-chunk=all")
+                      .thumbnail(
+                        resizeDimension=="w"? resizeTo : 10000,
+                        resizeDimension=="h"? resizeTo : 10000
+                      )
+                      .toBuffer(function(err, buffer) {
+                        if (err) return deferred.reject(new Error(err));
+                        log("Resized [",
+                          gutil.colors.cyan(imageFile.relative),
+                          "] to",
+                          gutil.colors.green(resizeTo+resizeDimension),
+                          gutil.colors.gray("saving "+((imageFile.contents.length-buffer.length)/imageFile.contents.length*100).toFixed(2)+"%")
+                        );
+                        CACHE[cacheKey] = {content: buffer, iteration: iteration};
+                        that.push(createNewVinylFile(imageFile, buffer, resizeTo, resizeDimension));
+                        deferred.resolve();
+                      });
                   });
               }
             });
