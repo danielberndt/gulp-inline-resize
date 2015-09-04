@@ -1,6 +1,6 @@
 {
   "name": "gulp-inline-resize",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "define your image sizes in your code, not your build file",
   "main": "index.js",
   "scripts": {
