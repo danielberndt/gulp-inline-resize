@@ -137,4 +137,11 @@ describe("gulp-inline-resize", function() {
     }
   })
 
+  it("should not process an image if there's a file already in the `naiveCache` destination", function (done) {
+    gulp.src([fixtures("reference-1.html"),fixtures("image.jpg")]).on("error", console.log)
+      .pipe(inlineResize({naiveCache: {destFolder: path.join("test", "fixtures", "destfolder")}}))
+      .pipe(assert.length(1)) // one html file, two versions of the image
+      .pipe(assert.end(done));
+  })
+
 });

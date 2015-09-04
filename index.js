@@ -24,8 +24,9 @@ var retVal = function(opts) {
     replaceIn:[".html",".css",".js"],
     noZoom: true,
     useImageMagick: true,
-    quiet: false
-  },opts);
+    quiet: false,
+    naiveCache: {}
+  }, opts);
 
   function log() {
     if (options.quiet) return;
@@ -65,6 +66,13 @@ var retVal = function(opts) {
     return processesables;
   }
 
+  function newFileName(oldPath, resizeTo, resizeDimension) {
+    var extname = path.extname(oldPath);
+    return path.join(
+      path.dirname(oldPath), path.basename(oldPath, extname)+"-"+resizeTo+resizeDimension+extname
+    );
+  }
+
   // takes old file description and creates new file using new buffer
   function createNewVinylFile(oldFile, buffer, resizeTo, resizeDimension) {
     var oldPath = oldFile.path,
@@ -73,10 +81,7 @@ var retVal = function(opts) {
     return new gutil.File({
       cwd: oldFile.cwd,
       base: oldFile.base,
-      path: path.join(
-        path.dirname(oldPath),
-        path.basename(oldPath,extname)+"-"+resizeTo+resizeDimension+extname
-      ),
+      path: newFileName(oldFile.path, resizeTo, resizeDimension),
       contents: buffer
     });
   }
@@ -133,6 +138,16 @@ var retVal = function(opts) {
             fs.stat(imageFile.path, function(err, stats) {
               if (err) return deferred.reject(new Error(err));
               var cacheKey = imageFile.relative+"-"+stats.mtime.getTime()+resizeDimension+resizeTo;
+
+              if (options.naiveCache.destFolder) {
+                var relativePath = path.relative(imageFile.base, newFileName(imageFile.path, resizeTo, resizeDimension));
+                var targetPath = path.join(imageFile.cwd, options.naiveCache.destFolder, relativePath);
+                var targetStats = null;
+                try {targetStats = fs.statSync(targetPath);} catch (e) {}
+
+                // simply return nothing, since it's already there!
+                if (targetStats && targetStats.mtime.getTime() > stats.mtime.getTime()) return deferred.resolve();;
+              }
 
               // if it's cached push it right away
               var cacheEntry = CACHE[cacheKey];

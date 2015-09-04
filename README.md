@@ -153,6 +153,21 @@ default: `false`
 
 this plugin is quite chatty keeping you informed about what it found and did, surpress any log messages by setting this option
 
+#### `naiveCache`
+
+default: `{destFolder: null}`
+
+usage: `.pipe(inlineResize({naiveCache: {destFolder: "build"}}))`
+
+if you provide a destination folder, this option will look inside this folder to check wether a file with the target file name exists.
+
+Why *naive cache* you might ask?
+
+Well, since the inline resizer is operating within streams, it doesn't know what happens to the files after it processed them. You could decide to rename them or put them into a sprite sheet. In those cases this option doesn't work.
+
+However it's very useful for simple setups with lots of images since it will speed up the initial processing speed considerably.
+
+
 ## Global Options
 
 Global options should be applied at the top of your gulpfile. These options will affect all `inlineResize()` operations.
