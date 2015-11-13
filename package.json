@@ -18,7 +18,7 @@
   "dependencies": {
     "adler32": "^0.1.5",
     "buffer-equal": "0.0.1",
-    "gm": "^1.17.0",
+    "gm": "^1.21.1",
     "gulp": "^3.8.10",
     "gulp-util": "^3.0.2",
     "lodash.contains": "^2.4.1",
